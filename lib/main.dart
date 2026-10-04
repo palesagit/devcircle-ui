@@ -38,3 +38,38 @@ class Meeting {
   final DateTime when;
   Meeting(this.topic, this.link, this.when);
 }
+
+// ---------- Reusable dialog with text fields ----------
+Future<List<String>?> askFields(
+    BuildContext context, String title, List<String> labels) {
+  final controllers = labels.map((_) => TextEditingController()).toList();
+  return showDialog<List<String>>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < labels.length; i++)
+            TextField(
+              controller: controllers[i],
+              autofocus: i == 0,
+              decoration: InputDecoration(labelText: labels[i]),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(
+              ctx, controllers.map((c) => c.text.trim()).toList()),
+          child: const Text('Save'),
+        ),
+      ],
+    ),
+  );
+}
+
