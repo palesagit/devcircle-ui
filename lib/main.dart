@@ -104,3 +104,51 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+// ---------- Topics ----------
+class TopicsTab extends StatefulWidget {
+  const TopicsTab({super.key});
+
+  @override
+  State<TopicsTab> createState() => _TopicsTabState();
+}
+
+class _TopicsTabState extends State<TopicsTab> {
+  // topic name -> list of messages (starts empty, like Step 3 of the preview)
+  final Map<String, List<Message>> _topics = {};
+
+  Future<void> _addTopic() async {
+    final result = await askFields(context, 'New topic', ['Topic name']);
+    final name = result?.first ?? '';
+    if (name.isEmpty) return;
+    setState(() => _topics.putIfAbsent(name, () => []));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Topics')),
+      body: _topics.isEmpty
+          ? const Center(child: Text('No topics yet — start one!'))
+          : ListView(
+              children: _topics.keys.map((name) {
+                return ListTile(
+                  leading: const Icon(Icons.tag),
+                  title: Text(name),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          ChatPage(topic: name, messages: _topics[name]!),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addTopic,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
