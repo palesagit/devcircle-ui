@@ -73,3 +73,34 @@ Future<List<String>?> askFields(
   );
 }
 
+// ---------- Home: bottom navigation ----------
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // IndexedStack keeps each tab's data alive when you switch tabs
+      body: IndexedStack(
+        index: _index,
+        children: const [TopicsTab(), ResourcesTab(), MeetingsTab()],
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.forum), label: 'Topics'),
+          NavigationDestination(icon: Icon(Icons.link), label: 'Resources'),
+          NavigationDestination(icon: Icon(Icons.event), label: 'Meetings'),
+        ],
+      ),
+    );
+  }
+}
