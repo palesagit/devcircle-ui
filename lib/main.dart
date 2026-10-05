@@ -152,3 +152,29 @@ class _TopicsTabState extends State<TopicsTab> {
     );
   }
 }
+
+// ---------- Chat ----------
+class ChatPage extends StatefulWidget {
+  final String topic;
+  final List<Message> messages;
+  const ChatPage({super.key, required this.topic, required this.messages});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final _controller = TextEditingController();
+
+  void _send() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    setState(() => widget.messages.add(Message(currentUser, text)));
+    _controller.clear();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
