@@ -10,9 +10,11 @@ class DevCircleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dev Circle',
+      title: 'DevCircle',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8E5FC1)),
       ),
       home: const HomePage(),
     );
@@ -179,7 +181,7 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.topic)),
