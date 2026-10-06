@@ -289,3 +289,70 @@ class _ResourcesTabState extends State<ResourcesTab> {
     );
   }
 }
+
+// ---------- Meetings ----------
+class MeetingsTab extends StatefulWidget {
+  const MeetingsTab({super.key});
+
+  @override
+  State<MeetingsTab> createState() => _MeetingsTabState();
+}
+
+class _MeetingsTabState extends State<MeetingsTab> {
+  final List<Meeting> _meetings = [];
+  static const _months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  Future<void> _addMeeting() async {
+    final r =
+        await askFields(context, 'New meeting', ['Topic', 'Meeting link']);
+    if (r == null || r[0].isEmpty) return;
+    if (!mounted) return; // context is used after an await
+
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date == null || !mounted) return;
+
+    final time =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (time == null) return;
+
+    final when =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    setState(() {
+      _meetings.add(Meeting(r[0], r[1], when));
+      _meetings.sort((a, b) => a.when.compareTo(b.when)); // soonest first
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Meetings')),
+      body: _meetings.isEmpty
+          ? const Center(child: Text('No meetings scheduled.'))
+          : ListView(
+              children: _meetings.map((m) {
+                final t = TimeOfDay.fromDateTime(m.when).format(context);
+                return ListTile(
+                  leading: const Icon(Icons.event),
+                  title: Text(m.topic),
+                  subtitle:
+                      Text('${_months[m.when.month - 1]} ${m.when.day} • $t'),
+                  trailing: const Icon(Icons.open_in_new, size: 18),
+                );
+              }).toList(),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addMeeting,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
