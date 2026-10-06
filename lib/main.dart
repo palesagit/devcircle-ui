@@ -248,3 +248,44 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+// ---------- Resources ----------
+class ResourcesTab extends StatefulWidget {
+  const ResourcesTab({super.key});
+
+  @override
+  State<ResourcesTab> createState() => _ResourcesTabState();
+}
+
+class _ResourcesTabState extends State<ResourcesTab> {
+  final List<Resource> _resources = [
+    Resource('Big-O Cheat Sheet', 'bigocheatsheet.com'),
+    Resource('Dart Language Tour', 'dart.dev/language'),
+  ];
+
+  Future<void> _addResource() async {
+    final r = await askFields(context, 'Share a resource', ['Title', 'Link']);
+    if (r == null || r[0].isEmpty || r[1].isEmpty) return;
+    setState(() => _resources.add(Resource(r[0], r[1])));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Resources')),
+      body: ListView(
+        children: _resources
+            .map((r) => ListTile(
+                  leading: const Icon(Icons.link),
+                  title: Text(r.title),
+                  subtitle: Text(r.link),
+                ))
+            .toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addResource,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
