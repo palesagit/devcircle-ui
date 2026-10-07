@@ -12,9 +12,11 @@ DevCircle is designed as a mini Discord-like platform created by a student (Pale
 
 As a student developer, one of the biggest challenges I faced when starting out was finding an easy way to organize quick peer study sessions and share documentation links with my classmates. **DevCircle UI** solves this by providing three main hubs:
 
-1. **💬 Topics & Live-style Chat**: Create custom discussion channels (e.g., `#flutter-dev`, `#algorithms`) and chat in real-time.
-2. **🔗 Shared Resources Shelf**: Bookmark and share essential developer cheat sheets, documentation links, and video tutorials.
-3. **📅 Study Sessions & Meetings**: Schedule upcoming study calls with interactive date and time pickers, automatically sorted by the soonest meeting time.
+1. **💬 Topics & Chat UI**: Create discussion topics (e.g., `Flutter-dev`, `Algorithms`) and add messages in the local app state.
+2. **🔗 Shared Resources Shelf**: Add developer resource titles and links to an in-app list.
+3. **📅 Study Sessions & Meetings**: Schedule meetings with date and time pickers; upcoming meetings are sorted by start time.
+
+This is a frontend prototype: messages, resources, and meetings are stored in memory and are not saved across app restarts or synced between users.
 
 ---
 
@@ -32,13 +34,13 @@ If you are evaluating my project or watching my presentation video, here is a st
   2. Enter a topic name like `Flutter-Tips` and tap **Save**.
   3. Tap on the newly created topic line to open the `ChatPage`.
   4. Type a message like *"Has anyone finished the Codelab?"* and press send.
-* **Talking point:** *"The chat bubble automatically detects sent vs received messages. My messages (`currentUser = 'lee_codes'`) align to the right with the primary purple theme bubble, while peer responses align to the left!"*
+* **Talking point:** *"Messages sent as the current user (`lee_codes`) appear on the right in the primary purple theme. The UI can align messages from other senders to the left, but this prototype does not generate peer replies."*
 
 ### 3. Adding a Learning Resource
 * **What to do:**
   1. Switch to the **Resources** tab.
   2. Click the `+` FAB button to bring up the double-input modal (`Title` and `Link`).
-  3. Enter `Flutter Docs` as Title and `docs.flutter.dev` as Link. Click **Save**.
+  3. Enter `Flutter Docs` as Title and `docs.flutter.dev` as Link. Click **Save** to add it to the in-app list.
 * **Talking point:** *"I built a reusable dynamic dialog helper function `askFields()` that accepts custom field labels and returns user inputs asynchronously."*
 
 ### 4. Scheduling a Study Meeting
@@ -46,7 +48,7 @@ If you are evaluating my project or watching my presentation video, here is a st
   1. Switch to the **Meetings** tab.
   2. Tap `+` FAB, type meeting topic `Final Project Prep` and link `meet.jit.si/study-room`.
   3. Use the Flutter native **Date Picker** to choose a date, and the **Time Picker** to pick a time.
-  4. Save and observe the list update.
+  4. Save and observe the topic and scheduled date/time in the list. Meeting links are currently collected but not displayed or opened.
 * **Talking point:** *"When a meeting is saved, Dart's native `.sort()` method reorganizes the list so that the soonest scheduled study session always appears at the top!"*
 
 ---
@@ -79,7 +81,7 @@ Follow these simple commands to run the project on your machine:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/devcircle-ui.git
+git clone https://github.com/palesagit/devcircle-ui.git
 
 # 2. Move into the project directory
 cd devcircle-ui
