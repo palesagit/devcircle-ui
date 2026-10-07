@@ -1,5 +1,5 @@
 name: devcircle_ui
-description: DevCircle - a mini Discord for software engineering students (Track 1: Flutter and Dart UI).
+description: "DevCircle - a mini Discord for software engineering students (Track 1: Flutter and Dart UI)."
 publish_to: 'none'
 version: 1.0.0+1
 
