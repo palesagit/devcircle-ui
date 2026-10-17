@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const DevCircleApp());
 
@@ -19,6 +20,14 @@ class DevCircleApp extends StatelessWidget {
       home: const HomePage(),
     );
   }
+}
+
+Future<void> copyLink(BuildContext context, String link) async {
+  await Clipboard.setData(ClipboardData(text: link));
+  if (!context.mounted) return;
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Link copied to clipboard')),
+  );
 }
 
 //DATA MODELS
@@ -123,6 +132,13 @@ class _TopicsTabState extends State<TopicsTab> {
     final result = await askFields(context, 'New topic', ['Topic name']);
     final name = result?.first ?? '';
     if (name.isEmpty) return;
+    if (_topics.containsKey(name)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('That topic already exists')),
+      );
+      return;
+    }
     setState(() => _topics.putIfAbsent(name, () => []));
   }
 
@@ -188,42 +204,50 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: widget.messages.length,
-              itemBuilder: (context, i) {
-                final m = widget.messages[i];
-                final mine = m.sender == currentUser;
-                return Align(
-                  alignment:
-                      mine ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.all(10),
-                    constraints: const BoxConstraints(maxWidth: 260),
-                    decoration: BoxDecoration(
-                      color: mine
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(m.sender,
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: mine ? Colors.white70 : Colors.black54)),
-                        Text(m.text,
-                            style: TextStyle(
-                                color: mine ? Colors.white : Colors.black87)),
-                      ],
-                    ),
+            child: widget.messages.isEmpty
+                ? const Center(child: Text('No messages yet — say hi!'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: widget.messages.length,
+                    itemBuilder: (context, i) {
+                      final m = widget.messages[i];
+                      final mine = m.sender == currentUser;
+                      return Align(
+                        alignment:
+                            mine ? Alignment.centerRight : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.all(10),
+                          constraints: const BoxConstraints(maxWidth: 260),
+                          decoration: BoxDecoration(
+                            color: mine
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(m.sender,
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: mine
+                                          ? Colors.white70
+                                          : Colors.black54)),
+                              Text(m.text,
+                                  style: TextStyle(
+                                      color: mine
+                                          ? Colors.white
+                                          : Colors.black87)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
           SafeArea(
             child: Padding(
@@ -281,6 +305,8 @@ class _ResourcesTabState extends State<ResourcesTab> {
                   leading: const Icon(Icons.link),
                   title: Text(r.title),
                   subtitle: Text(r.link),
+                  trailing: const Icon(Icons.copy, size: 18),
+                  onTap: () => copyLink(context, r.link),
                 ))
             .toList(),
       ),
@@ -346,8 +372,13 @@ class _MeetingsTabState extends State<MeetingsTab> {
                   leading: const Icon(Icons.event),
                   title: Text(m.topic),
                   subtitle:
-                      Text('${_months[m.when.month - 1]} ${m.when.day} • $t'),
-                  trailing: const Icon(Icons.open_in_new, size: 18),
+                      Text('${_months[m.when.month - 1]} ${m.when.day} • $t'
+                          '${m.link.isEmpty ? '' : '\n${m.link}'}'),
+                  isThreeLine: m.link.isNotEmpty,
+                  trailing:
+                      m.link.isEmpty ? null : const Icon(Icons.copy, size: 18),
+                  onTap:
+                      m.link.isEmpty ? null : () => copyLink(context, m.link),
                 );
               }).toList(),
             ),
