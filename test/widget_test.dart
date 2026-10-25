@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:devcircle_ui/main.dart';
 
 void main() {
-  // CHANGED: the app starts completely empty - no sample data.
+  // the app starts completely empty - no sample data.
   testWidgets('App starts empty', (tester) async {
     await tester.pumpWidget(const DevCircleApp());
     expect(find.text('DevCircle'), findsOneWidget);
