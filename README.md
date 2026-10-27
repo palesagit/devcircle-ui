@@ -80,18 +80,14 @@ flutter build apk --release    # Android file in build/app/outputs/flutter-apk/
 7. Run `flutter test` and show that the tests pass.
 
 ## Screenshots
-From the repository directory (`devcircle-ui`), run:
-```powershell
-flutter pub get
-flutter run -d chrome
-```
 
-When the app opens in Chrome, use **Win + Shift + S** to capture the screens you want. Save the images in a `screenshots` folder in the project, then add a Markdown image link for each one, for example:
-```
-![Empty start](screenshots/empty.png)
-![Chat](screenshots/chat.png)
-![Resources and meetings](screenshots/sidebar.png)
-```
+| Empty start | Resources |
+|---|---|
+| ![Empty start](Screenshots/preview.png) | ![Resources](Screenshots/resources.png) |
+
+| Resource link added | Meeting scheduled |
+|---|---|
+| ![Resource link added](Screenshots/added_resources_link.png) | ![Meeting](Screenshots/meeting.png) |
 
 ## What I learned
 - How widgets build the screen and how `setState()` refreshes it.
