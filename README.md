@@ -41,7 +41,7 @@ This repository is my **Track 1** submission: the **user interface**, built with
 
 **One-time setup** (needs Flutter installed: https://docs.flutter.dev/get-started)
 ```bash
-git clone https://github.com/<your-github-username>/devcircle-ui.git
+git clone (link)
 cd devcircle-ui
 flutter create --project-name devcircle_ui .   # creates android/web/ios folders if missing
 flutter pub get                                # downloads packages
